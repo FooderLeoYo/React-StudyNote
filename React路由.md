@@ -30,6 +30,12 @@ React使用的库react-router-dom
 Cnpm install react-router-dom --save
 ```
 
+导入必要组件
+
+```javascript
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+```
+
 ---
 
 <span id="jump2"></span>
