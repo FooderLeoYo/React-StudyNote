@@ -18,13 +18,13 @@
 
 - Store:数据仓库，保存数据的地方。
 
-- State:state是1个对象，数据仓库里的所有数据都放到1个state里。
+- State:state是一个对象，数据仓库里的所有数据都放到一个state里。
 
-- Action:1个动作，触发数据改变的方法。
+- Action:一个动作，触发数据改变的方法。
 
 - Dispatch:将动作触发成方法
 
-- Reducer:是1个函数，通过获取动作，改变数据，生成1个新state。从而改变页面
+- Reducer:是一个函数，通过获取动作，改变数据，生成一个新state。从而改变页面
 
 ### 使用步骤
 
@@ -45,9 +45,15 @@ import {createStore} from 'redux'
 ```javascript
 // 创建仓库
 const store = createStore(reducer)
+
+// 初始化state
+let state = {
+  num: 0
+}
+
 // reduce有2个作用，1.初始化数据；2. 通过获取动作，改变数据
 // action就是dispatch括号内传过来的参数
-const reducer = function(state={num:0},action){
+const reducer = function(state=state, action){
     switch(action.type){
         case "add":
             state.num++;
@@ -95,13 +101,56 @@ store.subscribe(()=>{
 
 ### 几个概念
 
-- Provider组件：自动的将store里的state和组件进行关联。
+- MapStatetoProps
 
-- MapStatetoProps：这个函数用于将store的state映射到组件的里props
+mapStateToProps是一个函数
 
-- mapdispatchToProps:将store中的dispatch映射到组件的props里，实现了方法的共享。
+它的作用就是像它的名字那样，建立一个从（外部的）state对象到（UI 组件的）props对象的映射关系
 
-- Connect方法：将组件和数据（方法）进行连接
+作为函数，mapStateToProps执行后应该返回一个对象，里面的每一个键值对就是一个映射
+
+mapStateToProps会订阅 Store，每当state更新的时候，就会自动执行，重新计算 UI 组件的参数，从而触发 UI 组件的重新渲染
+
+```javascript
+const mapStateToProps = (state) => {
+  return {
+    todos: getVisibleTodos(state.todos, state.visibilityFilter)
+  }
+}
+```
+
+上面代码中，mapStateToProps是一个函数，它接受state作为参数，返回一个对象
+
+这个对象有一个todos属性，代表 UI 组件的同名参数，后面的getVisibleTodos也是一个函数，可以从state算出 todos 的值
+
+- mapdispatchToProps
+
+它可以是一个函数，也可以是一个对象
+
+用来建立 UI 组件的参数到store.dispatch方法的映射。也就是说，它定义了哪些用户的操作应该当作 Action，传给 Store
+
+- Connect方法
+
+React-Redux 提供connect方法，用于从 UI 组件生成容器组件
+
+```javascript
+import { connect } from 'react-redux'
+
+const VisibleTodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoList)
+```
+
+上面代码中，connect方法接受两个参数：mapStateToProps和mapDispatchToProps。它们定义了 UI 组件的业务逻辑
+
+前者负责输入逻辑，即将state映射到 UI 组件的参数（props），后者负责输出逻辑，即将用户对 UI 组件的操作映射成 Action
+
+- Provider组件
+
+connect方法生成容器组件以后，需要让容器组件拿到state对象，才能生成 UI 组件的参数
+
+React-Redux 提供Provider组件，可以让容器组件拿到state
 
 ### 使用步骤
 
@@ -123,7 +172,11 @@ import {connect, Provider} from 'react-redux'
 ```javascript
 const store = createStore(reducer)
 
-function reducer(state={num:0},action){
+let state = {
+  num: 0
+}
+
+function reducer(state=state, action){
     switch(action.type){
         case "add":
             state.num++;
@@ -178,4 +231,15 @@ const value = this.props.value;
 
 ```javascript
 const onAddClick = this.props.onAddClick;
+```
+
+包裹Provider
+
+```javascript
+render(
+  <Provider store={store}>
+    <TargetCom />
+  </Provider>,
+  document.getElementById('root')
+)
 ```
