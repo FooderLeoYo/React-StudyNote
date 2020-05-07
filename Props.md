@@ -8,9 +8,9 @@
 
 [默认 Props](#jump3)
 
-[State 和 Props](#jump4)
+[数据父传子](#jump4)
 
-[实现数据子传父](#jump5)
+[数据子传父](#jump5)
 
 ---	
 
@@ -82,7 +82,7 @@ HelloMessage.defaultProps = {
 
 <span id="jump4"></span>
 
-## State 和 Props
+## 数据父传子
 
 我们可以在父组件中设置 state，并通过在子组件上使用 props 将其传递到子组件上
 
@@ -116,7 +116,7 @@ class Child extends React.Component {
 
 <span id="jump5"></span>
 
-## 实现数据子传父
+## 数据子传父
 
 ### 实现原理
 
