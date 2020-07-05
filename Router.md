@@ -4,19 +4,19 @@
 
 [起步](#jump1)
 
-[<Router>](#jump2)
+[Router](#jump2)
 
-[<Route>](#jump3)
+[Route](#jump3)
 
-[<Switch>](#jump4)
+[Switch](#jump4)
 
 [Route的匹配原则](#jump5)
 
-[<Link>](#jump6)
+[Link](#jump6)
 
-[<NavLink>](#jump7)
+[NavLink](#jump7)
 
-[<Redirect>](#jump8)
+[Redirect](#jump8)
 
 [动态路由](#jump9)
 
@@ -46,9 +46,9 @@ import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 
 <span id="jump2"></span>
 
-## <Router>
+## Router
 
-like <BrowserRouter> and <HashRouter>
+like BrowserRouter and HashRouter
 
 ### 使用范例
 
@@ -70,13 +70,13 @@ class App extends React.Component {
 
 ### Router类型
 
-- <BrowserRouter>
+- BrowserRouter
 	
 	 - 生成常规格式的url
 	 
 	 - 需要配置服务器<配置指导>(https://create-react-app.dev/docs/deployment/#serving-apps-with-client-side-routing)
 
-- <HashRouter>
+- HashRouter
 
 	- 生成带#的url
 
@@ -88,7 +88,7 @@ class App extends React.Component {
 
 <span id="jump3"></span>
 
-## <Route>
+## Route
 
 Route代表了你的路由界面，path代表路径，component代表路径所对应的界面
 
@@ -143,13 +143,13 @@ It will be rendered with route props
 
 会创建新组件并卸载旧组件
 
-#### <Route render> function
+#### Route render function
 
 匹配路径后会更新组件而不像component渲染方式那样创建新组件并卸载旧组件
 
 you can pass in a function to be called when the location matches
 
-#### <Route children> function
+#### Route children function
 
 It works exactly like render except that it gets called whether there is a match or not
 
@@ -235,7 +235,7 @@ history objects typically have the following properties and methods:
 
 - block(prompt)
 
-* 注意：
+注意：
 
 ```
 The history object is mutable
@@ -247,7 +247,7 @@ not from history.location
 
 <span id="jump4"></span>
 
-## <Switch>
+## Switch
 
 Switch只会渲染第一个匹配的路径，而只有Route则会全部渲染
 
@@ -293,7 +293,7 @@ v5.1后官方建议<Route>都应在<Switch>渲染
 
 <span id="jump6"></span>
 
-## <Link>
+## Link
 
 Link是react路由中的点击切换到哪一个组件的链接
 
@@ -347,9 +347,9 @@ render(){
 
 <span id="jump7"></span>
 
-## <NavLink>
+## NavLink
 
-- 是一种特殊的<Link>
+- 是一种特殊的Link
 
 - 当被激活的时候，可以添加样式
 
@@ -369,7 +369,7 @@ render(){
 
 <span id="jump8"></span>
 
-## <Redirect>
+## Redirect
 
 重定向和跳转有一个重要的区别，就是跳转式可以用浏览器的回退按钮返回上一级的，而重定向是不可以的
 
