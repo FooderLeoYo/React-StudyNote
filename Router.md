@@ -4,9 +4,21 @@
 
 [起步](#jump1)
 
-[ReactRouter三大组件](#jump2)
+[<Router>](#jump2)
 
-[动态路由](#jump3)
+[<Route>](#jump3)
+
+[<Switch>](#jump4)
+
+[Route的匹配原则](#jump5)
+
+[<Link>](#jump6)
+
+[<NavLink>](#jump7)
+
+[<Redirect>](#jump8)
+
+[动态路由](#jump9)
 
 ---	
 
@@ -34,13 +46,11 @@ import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 
 <span id="jump2"></span>
 
-## ReactRouter三大组件
-
-### <Router>
+## <Router>
 
 like <BrowserRouter> and <HashRouter>
 
-#### 使用范例
+### 使用范例
 
 Router我们可以把它看做是react路由的一个路由外层盒子
 
@@ -58,7 +68,7 @@ class App extends React.Component {
 }
 ```
 
-#### Router类型
+### Router类型
 
 - <BrowserRouter>
 	
@@ -74,13 +84,15 @@ class App extends React.Component {
 
 ```
 
-### Route Matchers
+---
 
-like <Route> and <Switch>
+<span id="jump3"></span>
 
-#### <Route>
+## <Route>
 
 Route代表了你的路由界面，path代表路径，component代表路径所对应的界面
+
+### 使用范例
 
 ```javascript
 class App extends React.Component {
@@ -99,7 +111,7 @@ class App extends React.Component {
 }
 ```
 
-#### 精确匹配
+### 精确匹配
  
 route上设置exact属性
 
@@ -113,7 +125,129 @@ route上设置exact属性
 <Route path='/page' component={Page} />
 ```
 
-#### <Switch>
+### Route render methods
+
+All three render methods will be passed the same three route props
+
+- match
+
+- location
+
+-history
+
+#### <Route component>
+
+A React component to render only when the location matches
+
+It will be rendered with route props
+
+会创建新组件并卸载旧组件
+
+#### <Route render> function
+
+匹配路径后会更新组件而不像component渲染方式那样创建新组件并卸载旧组件
+
+you can pass in a function to be called when the location matches
+
+#### <Route children> function
+
+It works exactly like render except that it gets called whether there is a match or not
+
+<Route children> takes precedence over both <Route component> and <Route render>
+
+### Route props
+
+#### match
+
+match objects contain the following properties:
+
+- params 
+
+- isExact 
+
+- path 
+
+- url 
+
+You’ll have access to match objects in various places:
+
+```
+Route component as this.props.match
+Route render as ({ match }) => ()
+Route children as ({ match }) => ()
+withRouter as this.props.match
+matchPath as the return value
+useRouteMatch as the return value
+```
+
+#### location
+
+It looks like this:
+
+```javascript
+{
+  key: 'ac3df4', // not with HashHistory!
+  pathname: '/somewhere',
+  search: '?some=search-string',
+  hash: '#howdy',
+  state: {
+    [userDefined]: true
+  }
+}
+```
+
+The router will provide you with a location object in a few places:
+
+```
+Route component as this.props.location
+Route render as ({ location }) => ()
+Route children as ({ location }) => ()
+withRouter as this.props.location
+```
+
+#### history
+
+history objects typically have the following properties and methods:
+
+- length 
+
+- action
+
+- location 
+
+	- pathname 
+
+	- search 
+
+	- hash
+
+	- state
+
+- push(path, [state])
+
+- replace(path, [state])
+
+- go(n)
+
+- goBack()
+
+- goForward()
+
+- block(prompt)
+
+* 注意：
+
+```
+The history object is mutable
+Therefore it is recommended to access the location from the render props of <Route>
+not from history.location
+```
+
+---
+
+<span id="jump4"></span>
+
+## <Switch>
 
 Switch只会渲染第一个匹配的路径，而只有Route则会全部渲染
 
@@ -121,11 +255,19 @@ Switch只会渲染第一个匹配的路径，而只有Route则会全部渲染
 
 v5.1后官方建议<Route>都应在<Switch>渲染
 
-#### Route的匹配原则
+---
 
-- 若某个path是某个url的前面一段，就会被匹配，如：path="/a"会匹配任何以'/a'开头的url
+<span id="jump5"></span>
 
-- 为了避免出现这种匹配，route遵循越高层级越靠后的摆放规则，如：<Route path="/">总在最后
+## Route的匹配原则
+
+- 若某个path是某个url的前面一段，就会被匹配
+	
+	如：path="/a"会匹配任何以'/a'开头的url
+
+- 为了避免出现这种匹配，route遵循越高层级越靠后的摆放规则
+
+	如：<Route path="/">总在最后
 
 	```javascript
 	function App() {
@@ -147,13 +289,15 @@ v5.1后官方建议<Route>都应在<Switch>渲染
 	}
 	```
 
-### Navigation
+---
 
-like <Link>, <NavLink>, and <Redirect>
+<span id="jump6"></span>
 
-#### <Link>
+## <Link>
 
 Link是react路由中的点击切换到哪一个组件的链接
+
+### 使用范例
 
 ```javascript
 class Main extends React.Component{
@@ -172,7 +316,7 @@ class Main extends React.Component{
 }
 ```
 
-to属性可以是一个对象
+### to属性可以是一个对象
 
 ```javascript
 render(){
@@ -194,10 +338,16 @@ render(){
     }
 ```
 
-Link的replace属性：点击链接后，将新地址替换成历史访问记录的原地址
+### Link的replace属性
+
+点击链接后，将新地址替换成历史访问记录的原地址
 
 
-#### <NavLink>
+---
+
+<span id="jump7"></span>
+
+## <NavLink>
 
 - 是一种特殊的<Link>
 
@@ -215,11 +365,15 @@ Link的replace属性：点击链接后，将新地址替换成历史访问记录
 	// <a href="/react">React</a>
 	```
 
-#### <Redirect>
+---
+
+<span id="jump8"></span>
+
+## <Redirect>
 
 重定向和跳转有一个重要的区别，就是跳转式可以用浏览器的回退按钮返回上一级的，而重定向是不可以的
 
-##### 标签式重定向
+### 标签式重定向
 
 就是利用<Redirect>标签来进行重定向，业务逻辑不复杂时建议使用这种
 
@@ -227,7 +381,7 @@ Link的replace属性：点击链接后，将新地址替换成历史访问记录
  <Redirect to="/home/" />
 ```
 
-##### 编程式重定向
+### 编程式重定向
 
 编程式重定向就是不再利用<Redirect/>标签，而是直接使用JS的语法（history）实现重定向
 
@@ -241,7 +395,7 @@ Link的replace属性：点击链接后，将新地址替换成历史访问记录
 
 ---
 
-<span id="jump3"></span>
+<span id="jump9"></span>
 
 ## 动态路由
 
