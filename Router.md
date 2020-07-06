@@ -82,8 +82,6 @@ class App extends React.Component {
 
 	- 不需要配置服务器，因为hash不会被发送到服务器
 
-```
-
 ---
 
 <span id="jump3"></span>
@@ -135,7 +133,7 @@ All three render methods will be passed the same three route props
 
 -history
 
-#### <Route component>
+#### Route component
 
 A React component to render only when the location matches
 
@@ -148,6 +146,21 @@ It will be rendered with route props
 匹配路径后会更新组件而不像component渲染方式那样创建新组件并卸载旧组件
 
 you can pass in a function to be called when the location matches
+
+```javascript
+function FadingRoute({ component: Component, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={routeProps => (
+        <FadeIn>
+          <Component {...routeProps} />
+        </FadeIn>
+      )}
+    />
+  );
+}
+```
 
 #### Route children function
 
