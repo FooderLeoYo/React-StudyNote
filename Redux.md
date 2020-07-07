@@ -1,4 +1,4 @@
-# 状态管理
+# Redux
 
 ## 目录
 
@@ -13,10 +13,6 @@
 [React-Redux](#jump5)
 
 [Redux-Thunk](#jump6)
-
-[](#jump2)
-
-[](#jump2)
 
 ---	
 
@@ -328,3 +324,4 @@ function getRequest() {
   }
 }
 ```
+
