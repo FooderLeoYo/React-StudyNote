@@ -151,37 +151,15 @@ dispatch()返回值为：The dispatched action
 
 <span id="jump4"></span>
 
-## Data Flow
+## Redux数据流程
 
-Redux architecture revolves around a **strict unidirectional data flow**
+1. createStore()创建一个store，参数中传入reducers、middlewares
 
-The data lifecycle in any Redux app follows these 4 steps:
+2. action creator创建一个action
 
-1. You call `store.dispatch(action)`.
+3. dispatch()将新建的action发送给store
 
-	An `action` is a plain object describing what happened.
-
-	You can call `store.dispatch(action)` from anywhere in your app.
-
-2. The Redux store calls the reducer function you gave it.
-
-	The `store` will pass two arguments to the `reducer`：
-	
-	the current state tree and the action.
-
-3. The root reducer may combine the output of multiple reducers into a single state tree.
-
-	How you structure the root reducer is completely up to you. 
-
-	Redux ships with a `combineReducers()` helper function.
-
-4. The Redux store saves the complete state tree returned by the root reducer.
-
-	This new tree is now the next state of your app
-
-	Every listener registered with store.subscribe(listener) will now be invoked.
-
-	If you use bindings like React Redux, this is the point at which component.setState(newState) is called.
+4. store将收到的action以及旧的state传进对应的reducer，reducer执行后返回更新state
 
 ---
 
@@ -197,11 +175,9 @@ cnpm install react-redux -s
 
 ### `Provider()`
 
-Make the store available to all container components in the application
+在最外层，把所有内容包裹在Provider组件中
 
-在最外层容器中，把所有内容包裹在Provider组件中
-
-将之前创建的store作为prop传给Provider
+其作用是将之前创建的store作为props，提供给Provider所包裹的组件使用
 
 ```javascript
 const App = () => {
@@ -215,9 +191,15 @@ const App = () => {
 
 ### `connect()`
 
-Provider内的任何一个组件如果需要使用state中的数据，就必须是「被 connect 过的」组件
+connect()返回的是：原组件将所选的state和action添加进props后的新组件
 
-connect()返回的是原组件添加state和action进props后的新组件
+### connect的两个作用
+
+- Provider内的任何一个组件如果需要使用state中的数据，就必须是「被 connect 过的」组件
+
+- connect后，相当于做了过滤，能保证组件拿到的props就只有自己需要的，而不是整个store
+
+### 两个参数
 
 The connect function takes two arguments, both optional:
 
@@ -252,26 +234,20 @@ const mapStateToProps = (state) => {
 ### 使用connect的范例
 
 ```javascript
-import { connect } from 'react-redux'
-import { increment, decrement, reset } from './actionCreators'
+import { connect } from "react-redux";
+import Ranking from "../../views/ranking/Ranking";
 
-// react组件ReactCounter
-const ReactCounter = {
-  // 组件的内容
-}
+// Ranking组件只会拿mapStateToProps定义的三个state属性作为props，而不会拿整个store
+const mapStateToProps = (state) => ({
+  shouldLoad: state.shouldLoad,
+  rankingPartitions: state.rankingPartitions,
+  rankingVideos: state.rankingVideos
+});
 
-const mapStateToProps = (state /*, ownProps*/) => {
-  return {
-    counter: state.counter
-  }
-}
-
+// actions同理
 const mapDispatchToProps = { increment, decrement, reset }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReactCounter)
+export default connect(mapStateToProps, mapDispatchToProps)(Ranking);
 ```
 
 ---
@@ -290,7 +266,7 @@ Redux只能同步dispatch，需要实现异步dispatch时，就要使用中间�
 cnpm install redux-thunk -s
 ```
 
-然后在store.js中：
+然后在store.js中，创建新store时将thunk应用到其中：
 
 ```javascript
 import { createStore, applyMiddleware } from 'redux';
@@ -303,6 +279,10 @@ export default store;
 ```
 
 ### 实现异步dispatch
+
+同步时，action creactor的返回值是一个简单action对象，提供给dispatch()作为参数，发送给store修改state
+
+而使用了redux-thunk后，因此可以直接在action creactor中dispatch
 
 一个例子：
 
@@ -328,4 +308,3 @@ function getRequest() {
   }
 }
 ```
-
