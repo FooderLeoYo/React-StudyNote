@@ -137,13 +137,15 @@ You may optionally specify the initial state as the second argument to createSto
 const store = createStore(todoApp, window.STATE_FROM_SERVER)
 ```
 
-### Dispatching Actions
+### dispatch()
 
-然后你可以通过 dispatch 一个 action 来让Store改变状态：
+然后你可以通过 `dispatch()` 一个 action 来让Store改变状态：
 
 ```javascript
 store.dispatch( changeText() );
 ```
+
+dispatch()返回值为：The dispatched action
 
 ---
 
