@@ -8,7 +8,7 @@
 
 [Store](#jump3)
 
-[Data Flow](#jump4)
+[Redux数据流程](#jump4)
 
 [React-Redux](#jump5)
 
@@ -159,7 +159,9 @@ dispatch()返回值为：The dispatched action
 
 3. dispatch()将新建的action发送给store
 
-4. store将收到的action以及旧的state传进对应的reducer，reducer执行后返回更新state
+4. store将收到的action以及旧的state传进reducer（通常是使用combineReducers()整合多个reducers的一个总的reducer）
+
+5. reducer根据type执行相应操作后返回更新state
 
 ---
 
