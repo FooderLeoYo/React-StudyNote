@@ -256,7 +256,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(Ranking);
 
 ## Redux-Thunk
 
-Redux只能同步dispatch，需要实现异步dispatch时，就要使用中间件Redux-Thunk
+Redux-Thunk实现的功能就是：在dispatch一个action之后，到达reducer之前，进行一些额外的操作
+
+Redux原生dispatch()只能用一个返回值为`plain object`的`action creator`作为参数，使用Redux-Thunk后则可以用返回值为函数的做参数
+
+正因为这个action creator可以返回一个函数，那么就可以在这个函数中执行一些异步的操作
 
 ### 安装及配置
 
@@ -278,22 +282,19 @@ const store = () => createStore(rootReducer, applyMiddleware(thunk));
 export default store;
 ```
 
-### 实现异步dispatch
+### 应用实例
 
-同步时，action creactor的返回值是一个简单action对象，提供给dispatch()作为参数，发送给store修改state
-
-而使用了redux-thunk后，因此可以直接在action creactor中dispatch
-
-一个例子：
+action creator：
 
 ```javascript
-function getRequest() {
+// asyncActionCreator是一个action creator，只不过和同步creator不同，它的返回值是一个函数
+function asyncActionCreator(可传入参数) {
   return dispatch => {
     axios({
       method: 'get',
       url: 'https://randomuser.me/api',
     })
-    .then((res) => {
+    .then(res => {
       const action = {
         type: UPDATE_REQUESTNAME,
         payload: {
@@ -308,3 +309,12 @@ function getRequest() {
   }
 }
 ```
+
+组件中：
+
+```javascript
+this.props.dispatch(asyncActionCreator(可传入参数))
+  // 可以使用.then
+  .then(() => {
+    // do something
+  })
