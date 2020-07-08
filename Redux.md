@@ -215,6 +215,8 @@ const App = () => {
 
 Provider内的任何一个组件如果需要使用state中的数据，就必须是「被 connect 过的」组件
 
+connect()返回的是原组件添加state和action进props后的新组件
+
 The connect function takes two arguments, both optional:
 
 - mapStateToProps(state, 组件本身的props)
