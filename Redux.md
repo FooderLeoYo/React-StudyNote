@@ -14,6 +14,8 @@
 
 [Redux-Thunk](#jump6)
 
+[数据持久化](#jump7)
+
 ---	
 
 <span id="jump1"></span>
@@ -320,3 +322,23 @@ this.props.dispatch(asyncActionCreator(可传入参数))
   .then(() => {
     // do something
   })
+
+---	
+
+<span id="jump"></span>
+
+## 数据持久化
+
+### 页面未关闭redux的数据也可能被清除
+
+redux的数据在以下情况下会被清除：
+
+- 页面刷新
+
+- 组件卸载
+
+- 使用```window.location.href```而非router方式进行跳转
+
+### 实现数据持久化
+
+使用npm包```redux-persist```
