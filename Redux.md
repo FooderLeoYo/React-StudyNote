@@ -57,7 +57,7 @@ Reducer 就是一个纯函数，根据传入的 当前state 和 action ，返回
 
 ```javascript
 const initialState = {
-	roomData: {}
+  roomData: {}
 }
 
 function combineRoomData(roomData = initialState.roomData, action) {
@@ -70,13 +70,11 @@ function combineRoomData(roomData = initialState.roomData, action) {
 }
 
 export {
-	combineRoomData
+  combineRoomData
 }
 ```
 
-```
-
-### combineReducers() 
+### combineReducers()
 
 该方法可以将多个reducers合成一个对象对外导出
 
@@ -317,9 +315,11 @@ export default function getRoomData(roomId: number) {
 
 ```javascript
 store.dispatch(getRoomData(param.roomId));
+```
+
 ---	
 
-<span id="jump"></span>
+<span id="jump7"></span>
 
 ## 数据持久化
 
