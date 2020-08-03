@@ -28,28 +28,16 @@ Action 的任务是描述“发生了什么事情？”
 
 action是一个简单的对象，只提供事件的所有要素，不提供逻辑
 
-For example:
-
-```javascript
-{ type: 'LIKE_ARTICLE', articleId: 42 }
-{ type: 'FETCH_USER_SUCCESS', response: { id: 3, name: 'Mary' } }
-{ type: 'ADD_TODO', text: 'Read the Redux docs.' }
-```
-
-They are the **only** source of information for the store
-
 Actions must have a `type` property
 
 ### Action Creators
 
-比如刚才那个例子中我们把 text 从 “Hello world” 变成了 “Hello Stark” ，那么我们应该用一个 Action 对象来描述我们的行为：
-
 ```javascript
-function changeText(){
-    return {
-        type: 'CHANGE_TEXT',
-        newText: 'Hello Stark'
-    }
+function setRoomData(roomData) {
+  return { 
+	type: SET_ROOM_DATA, 
+	roomData 
+  };
 }
 ```
 
@@ -68,26 +56,24 @@ Reducer 的任务是根据传入的 Action 对象去修改状态树
 Reducer 就是一个纯函数，根据传入的 当前state 和 action ，返回一个新的 state 
 
 ```javascript
-(previousState, action) => nextState
+const initialState = {
+	roomData: {}
+}
+
+function combineRoomData(roomData = initialState.roomData, action) {
+  switch (action.type) {
+    case SET_ROOM_DATA:
+      return action.roomData;
+    default:
+      return roomData;
+  }
+}
+
+export {
+	combineRoomData
+}
 ```
 
-比如我们这个例子中的 Reducer 应该是这样的：
-
-```javascript
-const initialState = {
-    text : 'Hello world'
-}
-
-function Reducer(state=initialState, action) {
-    switch(action.type) {
-        case 'CHANGE_TEXT':
-            return {
-                text : 'Hello Stark'
-            }
-        default:
-            return state;
-    }
-}
 ```
 
 ### combineReducers() 
@@ -95,14 +81,13 @@ function Reducer(state=initialState, action) {
 该方法可以将多个reducers合成一个对象对外导出
 
 ```javascript
-import { combineReducers } from 'redux'
+const reducer = combineReducers({
+  liveData: combineLiveData,
+  liveListData: combineLiveListData,
+  roomData: combineRoomData,
+});
 
-const todoApp = combineReducers({
-  visibilityFilter,
-  todos
-})
-
-export default todoApp
+export default reducer;
 ```
 
 ---
@@ -144,10 +129,10 @@ const store = createStore(todoApp, window.STATE_FROM_SERVER)
 然后你可以通过 `dispatch()` 一个 action 来让Store改变状态：
 
 ```javascript
-store.dispatch( changeText() );
+store.dispatch(getRoomData(param.roomId))
 ```
 
-dispatch()返回值为：The dispatched action
+dispatch()返回The dispatched action
 
 ---
 
@@ -222,11 +207,9 @@ The connect function takes two arguments, both optional:
 - 第二个参数ownProps，是react组件自己的props
 
 ```javascript
-const mapStateToProps = (state) => {
-  return {
-    count: state.count
-  }
-}
+const mapStateToProps = (state) => ({
+  roomData: state.roomData
+});
 ```
 
 ### mapDispatchToProps
@@ -291,38 +274,49 @@ export default store;
 action creator：
 
 ```javascript
-// asyncActionCreator是一个action creator，只不过和同步creator不同，它的返回值是一个函数
-function asyncActionCreator(可传入参数) {
-  return dispatch => {
-    axios({
-      method: 'get',
-      url: 'https://randomuser.me/api',
-    })
-    .then(res => {
-      const action = {
-        type: UPDATE_REQUESTNAME,
-        payload: {
-          reducer: res.data.reducer
-        }
+// getRoomData是一个action creator，只不过和同步creator不同，它的返回值是一个函数
+import { AnyAction, Dispatch } from "redux";
+import { getRoomInfo, getPlayUrl } from "../../../api/live";
+import { setRoomData } from "../../action-creators";
+import { Live } from "../../../class-object-creators";
+
+export default function getRoomData(roomId: number) {
+  return (dispatch: Dispatch<AnyAction>) => {
+    const promises = [getRoomInfo(roomId), getPlayUrl(roomId)];
+    return Promise.all(promises).then(([result1, result2]) => {
+      if (result1.code === "1") {
+        const data = result1.data;
+        const live = new Live(
+          data.title,
+          data.room_id,
+          data.online,
+          data.user_cover,
+          data.live_status,
+          "",
+          null
+        );
+        live.playUrl = result2.data.durl[result2.data.current_quality - 1].url;
+
+        dispatch(setRoomData({
+          parentAreaId: data.parent_area_id,
+          parentAreaName: data.parent_area_name,
+          areaId: data.area_id,
+          areaName: data.area_name,
+          uId: data.uid,
+          description: data.description,
+          liveTime: data.live_time,
+          live,
+        }));
       }
-      dispatch(action)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+    });
+  };
 }
 ```
 
 组件中：
 
 ```javascript
-this.props.dispatch(asyncActionCreator(可传入参数))
-  // 可以使用.then
-  .then(() => {
-    // do something
-  })
-
+store.dispatch(getRoomData(param.roomId));
 ---	
 
 <span id="jump"></span>
