@@ -131,7 +131,7 @@ All three render methods will be passed the same three route props
 
 - location
 
--history
+- history
 
 #### Route component
 
