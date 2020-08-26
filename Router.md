@@ -20,6 +20,8 @@
 
 [动态路由](#jump9)
 
+[StaticRouter](#jump10)
+
 ---	
 
 <span id="jump1"></span>
@@ -465,3 +467,19 @@ class List extends Component {
 
 export default List;
 ```
+
+---
+
+<span id="jump10"></span>
+
+## StaticRouter
+
+用于SSR的服务端
+
+StaticRouter的静态体现在：
+ 
+它被使用在服务端，而服务端不会出现客户端那样的路由跳转(即不发生页面刷新)
+
+遇到新请求时ocation属性改变，进而加载对应该location的组件，然后发送新的响应给客户端并触发页面刷新
+
+它与router的关系是它需要按照客户端router的路由关系，来为请求url加载对应的组件
