@@ -6,7 +6,11 @@
 
 [setState()方法](#jump2)
 
-[单向数据流](#jump3)
+[setState是同步还是异步](#jump3)
+
+[通过setState触发重渲染](#jump4)
+
+[单向数据流](#jump5)
 
 ---	
 
@@ -49,6 +53,48 @@ this.setState({
 ---
 
 <span id="jump3"></span>
+
+## setState是同步还是异步
+
+### 何时同步何时异步
+
+由React控制的事件处理程序，以及生命周期函数调用setState不会同步更新state
+
+React控制之外的事件中调用setState是同步更新的。比如原生js绑定的事件，setTimeout/setInterval等
+
+### 异步的原因
+
+- 保证内部的一致性
+
+即使state是同步更新，props也不是（你只有在父组件重新渲染时才能知道props）
+
+那么如果先更新了state，随后props发生了改变，则又会触发之前的流程
+
+- 批量合并
+
+多个setState有可能在执行过程中还会被合并，因此应该让他们先合并完后再更新
+
+### 异步时查看更新后的state
+
+即setState后state不会立即更新
+
+因此想要console查看state更新后的值，需要将console放在setState第二个参数也就是回调函数中
+
+---
+
+<span id="jump4"></span>
+
+## 通过setState触发重渲染
+
+setState会触发render()的执行，但不一定会触发重渲染
+
+因为render()执行后，还会比对新的渲染数据是否与旧的不同，如果没发生变化则不会重渲染
+
+也就是说，如果想通过setState触发重渲染，更新的state一定要是渲染中用到的数据，不能是flag之类的
+
+<span id="jump5"></span>
+
+---
 
 ## 单向数据流
 
