@@ -4,11 +4,11 @@
 
 [componentDidMount](#jump1)
 
-[某个变量变化时执行相关操作](#jump2)
+[componentDidUpdate](#jump2)
 
 [componentWillUnmount](#jump3)
 
-[](#jump)
+[getDerivedStateFromProps](#jump4)
 
 [](#jump)
 
@@ -38,7 +38,7 @@ useEffect(() => {
 
 <span id="jump2"></span>
 
-## 某个变量变化时执行相关操作
+## componentDidUpdate
 
 使用```useEffect```
 
@@ -69,3 +69,22 @@ useEffect(() => {
   }
 }, [wsForClose]);
 ```
+
+---
+
+<span id="jump4"></span>
+
+## getDerivedStateFromProps
+
+把目标```prop```上一轮的变量的值存在一个```state```变量中
+
+比较目标```prop```变量的当前值与前一轮是否相同
+
+```javascript
+const [prevArg, setPrevArg] = useState(null);
+
+if (props.arg !== prevArg) {
+  // do sth
+}
+```
+
