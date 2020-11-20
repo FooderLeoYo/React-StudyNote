@@ -12,6 +12,8 @@
 
 [通过跳过 Effect 进行性能优化](#jump5)
 
+[useState的实现原理](#jump6)
+
 ---
 
 <span id="jump1"></span>
@@ -275,3 +277,34 @@ useEffect(() => {
 如果想执行只运行一次的 effect（仅在组件挂载和卸载时执行），可以传递一个空数组（[]）作为第二个参数
 
 这就告诉 React 你的 effect 不依赖于 props 或 state 中的任何值，所以它永远都不需要重复执行
+
+---
+
+<span id="jump6"></span>
+
+## useState的实现原理
+
+### 模拟useEffect
+
+```javascript
+let memoizedState = []; // hooks 存放在这个数组，与useState等其他hooks共用
+let cursor = 0; // 当前 memoizedState 下标
+
+function useEffect(callback, depArray) {
+  const hasNoDeps = !depArray;
+  const deps = memoizedState[cursor];
+  const hasChangedDeps = deps ?
+    !depArray.every((el, i) => el === deps[i])
+    : true;
+  if (hasNoDeps || hasChangedDeps) {
+    callback();
+    memoizedState[cursor] = depArray;
+  }
+  cursor++;
+}
+```
+
+### 为什么第二个参数是空数组，相当于 componentDidMount ？
+
+因为依赖一直不变化，第二次及之后的执行中，```deps```均为```[]```，```hasChangedDeps```均为``` ![] === []```，callback 不会二次执行
+
