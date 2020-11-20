@@ -332,7 +332,7 @@ function Comp () {
     // 不再是console.log(state)，而是：
     console.log(stateRef.current);
   }
-  htmlEle.addEventListener("click", F);
+  htmlEle.addEventListener("click", f);
 }
 ```
 
@@ -351,7 +351,7 @@ function Comp () {
   }
   useEffect(
     () => {
-      htmlEle.addEventListener("click", F);
+      htmlEle.addEventListener("click", f);
     },
     [state]
   ); 
