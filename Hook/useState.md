@@ -190,7 +190,7 @@ const [todos, setTodos] = useState([{ text: '学习 Hook' }]);
 ### 模拟useState
 
 ```javascript
-let memoizedState = []; //全局memoizedState用来存储state的值，避免重新渲染的时候被myUseState重置为初始值
+let memoizedState = []; //全局memoizedState用来存储state的值，避免重新渲染的时候被myUseState重置为初始值，与useEffect等其他hooks共用
 let cursor = 0; // 当前 memoizedState 下标
 
 const myUseState = initialValue => {
