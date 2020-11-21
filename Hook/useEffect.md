@@ -22,7 +22,7 @@
 
 ### 概念
 
-Effect Hook 可以让你在函数组件中执行副作用操作
+当你调用 useEffect 时，就是在告诉 React 在**每次DOM渲染完成之后**运行你的“副作用”函数
 
 可以把 useEffect Hook 看做 componentDidMount，componentDidUpdate 和 componentWillUnmount 这三个函数的组合
 
