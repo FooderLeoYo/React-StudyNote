@@ -6,9 +6,9 @@
 
 [useCallback](#jump2)
 
-[与useEffect的区别](#jump3)
+[使用场景](#jump3)
 
-[](#jump)
+[与useEffect的区别](#jump4)
 
 [](#jump)
 
@@ -41,13 +41,47 @@ memo是在**DOM更新前**触发的，类比生命周期就是```shouldComponent
 
 传入 useMemo 的函数会在**渲染期间**执行，不要在这个函数内部执行与渲染无关的操作
 
-### 使用场景
+---
+
+<span id="jump2"></span>
+
+## useCallback
+
+```javascript
+const memoizedCallback = useCallback(() => f(), []);
+```
+
+### 参数
+
+与useMemo一致，可以传入两个参数：
+
+- 第一个参数是一个回调函数，在**渲染期间**，将在依赖项发生改变时被执行
+
+- 第二个参数是依赖数组
+
+### 返回值
+
+返回第一个参数的 memoized 版本（是一个**函数**），在依赖参数不变的情况下，返回的回调函数是同一个引用地址
+
+### 其他
+
+useCallback(fn, deps) 相当于 useMemo(() => fn, deps)
+
+---
+
+<span id="jump3"></span>
+
+## 使用场景
+
+关于使用场景，二者的共同点就是它们都**仅作为性能优化的手段，而不要试图用它们阻止渲染**
+
+### useMemo
 
 某个值需要通过一个高开销的计算得到，当与这个值不相关的因素变化从而触发重渲染时，将引发该高开销的计算无意义的重新执行
 
-### 例子
+#### 例子
 
-#### 原始方案
+##### 原始方案
 
 ```javascript
 const [count, setCount] = useState(100);
@@ -89,7 +123,7 @@ return (
 
 点击触发了重渲染，computeValue的赋值语句被重新执行，进而countExpensiveComputation被重新执行，而这时count并没有发生变化
 
-#### 使用useMemo进行改进
+##### 使用useMemo进行改进
 
 将computeValue的赋值用useMemo进行包裹
 
@@ -125,37 +159,13 @@ return (
 
 当点击addIrrelevance时，发现控制台不再打印
 
----
-
-<span id="jump2"></span>
-
-## useCallback
-
-```javascript
-const memoizedCallback = useCallback(() => f(), []);
-```
-
-### 参数
-
-与useMemo一致，可以传入两个参数：
-
-- 第一个参数是一个回调函数，在**渲染期间**，将在依赖项发生改变时被执行
-
-- 第二个参数是依赖数组
-
-### 返回值
-
-返回第一个参数的 memoized 版本（是一个**函数**），在依赖参数不变的情况下，返回的回调函数是同一个引用地址
-
-### 其他
-
-useCallback(fn, deps) 相当于 useMemo(() => fn, deps)
-
-### 使用场景
+### useCallback
 
 父组件将一个函数作为props传递给子组件，当父组件重渲染时，将会同时触发子组件的无意义重渲染
 
-### 例子
+#### 例子
+
+##### 原始方案
 
 ```javascript
 const ParentComponent = () => {
@@ -195,7 +205,7 @@ const ChildComponent = memo(({ handleChild }) => {
 
 点击触发handleParent回调，setCount执行触发父组件重渲染，组件函数重新执行过程中新建一个handleChild，ChildComponent检测到其prop handleChild发生了变化因此也执行重渲染执，虽然ChildrenComponent采用了memo优化
 
-### 使用useCallback进行改进
+##### 使用useCallback进行改进
 
 将传递给子组件的点击回调函数用改为用useCallback包裹的handleChildCallback：
 
@@ -236,13 +246,13 @@ const ChildComponent = memo(({ handleChild }) => {
 
 说明改进后，父组件的操作不再引发不必要的子组件重渲染，这是因为：
 
-1. 父组件重渲染时，子组件的prop handleChild由于是经过useCallback处理的handleChildCallback，并不会如改进前那样发生变化，这里本质是利用了闭包
+1. 父组件重渲染时，子组件的prop handleChild拿到的将是hook中保存的的值，由于依赖项无变化，故拿到的是前一次的值
 
 2. 子组件本身是使用memo包裹的，即若props无变化则即使父组件重渲染也不会触发子组件重渲染
 
 ---
 
-<span id="jump3"></span> 
+<span id="jump4"></span> 
 
 ## 与useEffect的区别
 
@@ -322,4 +332,3 @@ return (
 ```
 
 上述代码当点击价钱+1按钮时，控制台没有输出，说明```getName```没有被触发
-
