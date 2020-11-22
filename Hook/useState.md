@@ -138,6 +138,8 @@ const [state, setState] = useState(() => {
 
 该函数将接收先前的 state，并返回一个更新后的值
 
+这种更新方式较之直接更新，最大的优点是可以避免闭包旧数据问题。因为函数式更新允许我们指定 state 该如何改变而不用引用当前 state，而回调函数中的参数一直都能拿到最新的state值
+
 例如：
 
 ```javascript
@@ -148,7 +150,7 @@ const [state, setState] = useState(() => {
 
 - setCount为更新state的函数
 
-- prevCount => prevCount + 1作为函数式参数传递给它
+- prevCount => prevCount + 1 作为函数式参数传递给它
 
 ---
 
