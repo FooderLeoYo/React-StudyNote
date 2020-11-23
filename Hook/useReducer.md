@@ -29,12 +29,6 @@ const [state, dispatch] = useReducer(reducer, initialArg, init);
 
 返回当前的 state 以及与其配套的 dispatch 方法，其中dispatch不会因re-render而改变
 
-useState 的替代方案，在某些场景下，useReducer 会比 useState 更适用，例如：
-
-- state 逻辑较复杂且包含多个子值
-
-- 下一个 state 依赖于之前的 state 等
-
 ---
 
 <span id="jump2"></span>
@@ -57,25 +51,24 @@ const [state, dispatch] = useReducer(
 需要将 init 函数作为 useReducer 的第三个参数传入，这样初始 state 将被设置为 init(initialArg)
 
 ```javascript
-function init(initialCount) {
-  return {count: initialCount};
-}
-
-function reducer(state, action) {
-  switch (action.type) {
-    case 'increment':
-      return {count: state.count + 1};
-    case 'decrement':
-      return {count: state.count - 1};
-    case 'reset':
-      return init(action.payload);
-    default:
-      throw new Error();
-  }
-}
-
 function Counter({initialCount}) {
-  const [state, dispatch] = useReducer(reducer, initialCount, init);
+  function init(initialCount) {
+    return {count: initialCount};
+  }
+
+  const [state, dispatch] = useReducer((state, action) => {
+    switch (action.type) {
+      case 'increment':
+        return {count: state.count + 1};
+      case 'decrement':
+        return {count: state.count - 1};
+      case 'reset':
+        return init(action.payload);
+      default:
+        throw new Error();
+    }
+  }, initialCount, init);
+
   return (
     <>
       Count: {state.count}
@@ -121,7 +114,7 @@ function Counter({initialCount}) {
 
 ## useReducer的优点
 
-- useReducer可以让我们将what和how分开。比如点击了登录按钮，我们要做的就是发起登陆操作dispatch({ type: 'login' })，点击退出按钮就发起退出操作dispatch({ type: 'logout' })，所有和how相关的代码都在reducer中维护，组件中只需要思考What。这让我们的代码可以像用户的行为一样，更加清晰，实现了表现和业务分离
+- useReducer可以让我们将what和how分开。比如点击了登录按钮，我们要做的就是发起登陆操作dispatch({ type: 'login' })，点击退出按钮就发起退出操作dispatch({ type: 'logout' })，所有和how相关的代码都在reducer中维护，组件中只需要思考What。这让我们的代码可以像用户的行为一样，更加清晰
 
 - 另一个好处是所有的state处理都集中到了一起，使得我们对state的变化更有掌控力，同时也更容易复用state逻辑变化代码，比如在其他函数中也需要触发登录error状态，只需要dispatch({ type: 'error' })
 
