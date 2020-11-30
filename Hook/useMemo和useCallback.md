@@ -256,9 +256,11 @@ const ChildComponent = memo(({ handleChild }) => {
 
 ## 与useEffect的区别
 
-二者与useEffect的语法格式一直，且都是在依赖项发生变化后才执行回调，区别就在于回调执行的时机
+二者与useEffect的语法格式一致，且都是在依赖项发生变化后才执行回调，区别在于：
 
-useEffect的回调在每次DOM渲染完成后才执行，而useMemo的回调则是在渲染期间执行
+- 回调执行的时机，useEffect的回调在每次DOM渲染完成后才执行，而useMemo的回调则是在渲染期间执行
+
+- useEffect的回调只要依赖项发生改变就会自动触发；useMemo和useCallback则是将目标变量或函数进行包裹，当使用该变量或函数且依赖项发生改变时，hook里的回调才会被触发
 
 ### 例子
 
