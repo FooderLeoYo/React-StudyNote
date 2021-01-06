@@ -139,4 +139,4 @@ class CustomTextInput extends React.Component {
 
 ## 将 DOM Refs 暴露给父组件
 
-你可能希望在父组件中引用子节点的 DOM 节点或实例，官方推荐使用 ref 转发
+你可能希望在父组件中引用子节点的 DOM 节点或实例，官方推荐使用[Refs转发](https://github.com/FooderLeoYo/React-StudyNote/blob/master/%E9%AB%98%E7%BA%A7/Refs%E8%BD%AC%E5%8F%91.md)
