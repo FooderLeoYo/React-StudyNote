@@ -118,7 +118,15 @@ class Child extends React.Component {
 
 ## 数据子传父
 
-### 实现原理
+### 利用ref透传
+
+类组件中，使用[Refs转发}(https://github.com/FooderLeoYo/React-StudyNote/blob/master/%E9%AB%98%E7%BA%A7/Refs%E8%BD%AC%E5%8F%91.md)，可将子组件的实例赋值给父组件传递过来的ref的current属性上
+
+函数组件中，使用[useImperativeHandle](https://github.com/FooderLeoYo/React-StudyNote/blob/master/Hook/useImperativeHandle.md)
+
+### 利用props
+
+#### 原理
 
 由于数据流是单向的，我们无法直接通过props实现子传父
 
@@ -126,7 +134,7 @@ class Child extends React.Component {
 
 因此通过传递父元素的函数，就可以去修改父元素的state，从而达到传递数据给父元素
 
-### 子传父实例
+#### 实例
 
 父组件
 
