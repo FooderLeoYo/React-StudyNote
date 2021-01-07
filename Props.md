@@ -120,7 +120,7 @@ class Child extends React.Component {
 
 ### 利用ref透传
 
-类组件中，使用[Refs转发}(https://github.com/FooderLeoYo/React-StudyNote/blob/master/%E9%AB%98%E7%BA%A7/Refs%E8%BD%AC%E5%8F%91.md)，可将子组件的实例赋值给父组件传递过来的ref的current属性上
+类组件中，使用[Refs转发](https://github.com/FooderLeoYo/React-StudyNote/blob/master/%E9%AB%98%E7%BA%A7/Refs%E8%BD%AC%E5%8F%91.md)，可将子组件的实例赋值给父组件传递过来的ref的current属性上
 
 函数组件中，使用[useImperativeHandle](https://github.com/FooderLeoYo/React-StudyNote/blob/master/Hook/useImperativeHandle.md)
 
