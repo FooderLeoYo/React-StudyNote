@@ -4,9 +4,9 @@
 
 [基本概念](#jump1)
 
-[用法](#jump2)
+[为什么需要它](#jump2)
 
-[](#jump)
+[使用实例](#jump3)
 
 [](#jump)
 
@@ -32,11 +32,47 @@ ReactDOM.createPortal(child, container)
 
 <span id="jump2"></span>
 
-## 用法
+## 为什么需要它
 
 通常来讲，当你从组件的 render 方法返回一个元素时，该元素将被挂载到 DOM 节点中离其最近的父节点
 
-然而，有时候将子元素插入到 DOM 节点中的不同位置也是有好处的，一个 portal 的典型用例是当父组件有 overflow: hidden 或 z-index 样式时，但你需要子组件能够在视觉上“跳出”其容器。例如，对话框、悬浮卡以及提示框
+在我们需要在正常 DOM 层次结构之外呈现子组件而又不通过 React 组件树层次结构破坏事件传播的默认行为时，React Portal（传送门）会派上用场,比如在渲染模态框，工具提示，弹出消息之类的组件时
 
-即使 Portal 是在父级 DOM 元素之外呈现的，他的表现行为也跟平常我们在 React 组件中使用是一样的。它能够接受 props 以及 context API。这是因为 Portal 驻留在 React Tree 层次结构内（也就是保证在同一颗 React Tree 上）
+但是当我们在特定元素（父组件）中使用模态弹窗时，模态的高度和宽度就会从模态弹窗所在的组件继承，也就是说模态弹窗的样式可能会被父组件影响
 
+---
+
+<span id="jump3"></span>
+
+## 使用实例
+
+下面的代码使用 createPortal() 在 root 树层次结构之外创建 DOM 节点：
+
+```javascript
+const Modal = ({ message, isOpen, onClose, children }) => {
+  if (!isOpen) return null;
+  return ReactDOM.createPortal(
+    <div className="modal">
+      <span>{message}</span>
+      <button onClick={onClose}>Close</button>
+    </div>,
+    document.body
+  );
+};
+
+function Component() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="component">
+      <button onClick={() => setOpen(true)}>Open Modal</button>
+      <Modal
+        message="Hello World!"
+        isOpen={open}
+        onClose={() => setOpen(false)}
+      />
+    </div>
+  );
+}
+```
+
+Modal组件将被注入 root 之外，并且与 root 处于同一层级
