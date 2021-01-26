@@ -69,7 +69,7 @@ const todoItems = todos.map((todo, index) =>
 
 ---
 
-<span id="jump3></span>
+<span id="jump3"></span>
 
 ## 用keys提取组件
 
