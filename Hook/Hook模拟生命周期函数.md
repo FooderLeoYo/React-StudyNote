@@ -80,14 +80,20 @@ useEffect(() => {
 
 ## getDerivedStateFromProps
 
-把目标```prop```上一轮的变量的值存在一个```state```变量中
+使用useState；这个state可以是组件渲染所依赖的某个数据，也可以一个最简单的flage，因为其目的仅仅是调用一个set方法进而触发组件刷新
 
-比较目标```prop```变量的当前值与前一轮是否相同
+使用useEffect，并把目标```prop```作为依赖参数，目标```prop```发生变化时需要执行的操作写在useEffect中
+
+调用set方法，触发组件刷新
 
 ```javascript
-const [prevArg, setPrevArg] = useState(null);
+const [flag, setFlag] = useState(1); // flag形式的state
+// 也可以是组件渲染所依赖的某个数据：const [data, setData] = useState(initData);
 
-if (props.arg !== prevArg) {
-  // do sth
-}
+useEffect(() => {
+  // 进行需要的操作
+  // ...
+  
+  setFlag(-flag); // 调用一个set方法进而触发组件刷新
+}, [props.目标prop]);
 ```
