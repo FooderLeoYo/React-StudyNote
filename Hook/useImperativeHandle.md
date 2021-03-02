@@ -41,6 +41,12 @@ useImperativeHandle(ref, createHandle, [deps])
 
 useImperativeHandle 应当与 forwardRef 一起使用，因为子组件对外暴露的实例是通过ref传递出去的
 
+### 弊端
+
+对于一个属性，将其作为子组件的属性，然后使用useImperativeHandle暴露给父组件使用，性能上不如将其作为父组件的属性，然后将该属性作为prop传递给子组件
+
+因此尽量还是使用传统的自上而下的数据流
+
 ---
 
 <span id="jump2"></span>
