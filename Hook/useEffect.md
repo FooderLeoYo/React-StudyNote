@@ -12,7 +12,9 @@
 
 [通过跳过 Effect 进行性能优化](#jump5)
 
-[useState的实现原理](#jump6)
+[useEffect的实现原理](#jump6)
+
+[useEffect相比于生命周期函数的优势](#jump7)
 
 ---
 
@@ -282,7 +284,7 @@ useEffect(() => {
 
 <span id="jump6"></span>
 
-## useState的实现原理
+## useEffect的实现原理
 
 ### 模拟useEffect
 
@@ -308,3 +310,12 @@ function useEffect(callback, depArray) {
 
 因为依赖一直不变化，第二次及之后的执行中，```deps```均为```[]```，```hasChangedDeps```均为``` ![] === []```，callback 不会二次执行
 
+---
+
+<span id="jump7"></span>
+
+## useEffect相比于生命周期函数的优势
+
+通过useEffect的第二个参数比较数组，可以精确控制哪些变量发生变化时才触发useEffect。而这些变量既可以是组件自身的变量，也可以是props中的变量
+
+虽然同样的效果也可以通过getDerivedStateFromProps、componentDidUpdate两个生命周期函数实现，但是所有的代码都写必须在这两个生命周期中，这样就不好区分某个变量变化时引发了哪些操作，代码可读性不如使用useEffect
