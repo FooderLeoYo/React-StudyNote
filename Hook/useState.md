@@ -14,6 +14,8 @@
 
 [useState的实现原理](#jump6)
 
+[更新state后的回调](#jump7)
+
 ---	
 
 <span id="jump1"></span>
@@ -216,3 +218,37 @@ const render = () => {
 如果在循环、判断内部使用Hook（指的是useState，useState所返回的state和setState可以使用），由于不一定会执行，就有可能导致某个state拿到原本不是它自己的序号所对应的值
 
 也正是因为这个原因，在使用 Hook 的时候，必须在函数组件顶部使用
+
+---
+
+<span id="jump7"></span>
+
+## 更新state后的回调
+
+同类组件的setState一样，HOOK更新state也是异步的。由于等待state更新后再执行相关操作是十分常见的需求，因此回调就非常重要
+
+但HOOK不支持setState那样将回调直接作为第二个参数
+
+HOOK的解决方案为使用useEffect
+
+  - 设置一个标记，以跳过targetState初始化赋值时触发的那次useEffect
+
+  - 将目标state作为useEffect的依赖参数
+
+例如：
+
+```javascript
+  const [targetState, setTargetState] = useState("old");
+  const [firstTime, setFirstTime] = useState(true); 
+
+  useEffect(() => {
+    !firstTime && console.log(targetState) // "new"
+  }, [targetState]);
+
+  useEffect(() => {
+    setTimeout(() => { // 模拟未来某一时刻targetState发生改变
+      setFirstTime(false);
+      setTargetState("new");
+    }, 5000);
+  }, []);
+```
