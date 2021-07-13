@@ -241,11 +241,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(Ranking);
 
 ## Redux-Thunk
 
-Redux-Thunk实现的功能就是：在dispatch一个action之后，到达reducer之前，进行一些额外的操作
+Redux-Thunk实现的功能就是：dispatch一个异步的action
 
 Redux原生dispatch()只能用一个返回值为`plain object`的`action creator`作为参数，使用Redux-Thunk后则可以用返回值为函数的做参数
 
-正因为这个action creator可以返回一个函数，那么就可以在这个函数中执行一些异步的操作
+正因为这个action creator可以返回一个函数，那么就可以在dispatch一个action之后，到达reducer之前，在这个函数中执行一些异步的操作
 
 ### 安装及配置
 
@@ -272,13 +272,14 @@ export default store;
 action creator：
 
 ```javascript
-// getRoomData是一个action creator，只不过和同步creator不同，它的返回值是一个函数
 import { AnyAction, Dispatch } from "redux";
 import { getRoomInfo, getPlayUrl } from "../../../api/live";
 import { setRoomData } from "../../action-creators";
 import { Live } from "../../../class-object-creators";
 
+// getRoomData就是一个action creator，只不过和同步creator不同，它的返回值是一个函数
 export default function getRoomData(roomId: number) {
+  // 这个函数就是一个“thunk”,它可以有两个参数dispatch和getState，都是store的成员方法
   return (dispatch: Dispatch<AnyAction>) => {
     const promises = [getRoomInfo(roomId), getPlayUrl(roomId)];
     return Promise.all(promises).then(([result1, result2]) => {
@@ -314,6 +315,7 @@ export default function getRoomData(roomId: number) {
 组件中：
 
 ```javascript
+// dispatch之所以可以将一个函数作为参数是因为使用了redux-thunk
 store.dispatch(getRoomData(param.roomId));
 ```
 
