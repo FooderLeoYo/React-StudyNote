@@ -345,10 +345,16 @@ redux的数据在以下情况下会被清除：
 
 <span id="通过dispatch更新store时的延迟"></span>
 
-## 通过dispatch更新store时的延迟
+## 通过dispatch更新redux时的延迟
 
-首先，dispatch自身是同步的，即从发送action到redux内的state更新这一过程是同步的，具体可参考[同步数据流](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow)
+### 原因
+
+首先，dispatch自身是一个同步的方法，即从发送action到redux内的state更新这一过程是同步的，具体可参考[同步数据流](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow)
 
 更新之所以出现延迟其实是因为React的setState
 
 通过react-redux连接器封装后的组件，其实就是在组件外层包了一层高阶组件。而这一个高阶组件在redux里的state更新时会调用异步的setState。所以，整个过程就会呈现异步的形式
+
+### 获取更新后的时机
+
+使用useEffect、getDerivedStateFromProps等，在其中通过判断目标redux值或与其关联的目标值是否已符合要求，来控制执行相关操作的时机
